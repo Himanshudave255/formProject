@@ -1,0 +1,280 @@
+{
+            "type": "text",
+            "label": "",
+            "id": "nameService",
+            "width": "100%",
+            "placeholder": "Name Services",
+            "class": "formFieldSpace",
+            "value": "",
+            "dependentOn": { "key": "availabilty", "value": "" },
+            "dependentOnBehaviour": "disable",
+            "disable": false,
+            "hint": "Unique identifier for your data source",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "text",
+            "label": "",
+            "id": "primaryNameNode",
+            "width": "100%",
+            "placeholder": "Primary NameNode",
+            "class": "formFieldSpace",
+            "dependentOn": { "key": "availabilty", "value": "" },
+            "dependentOnBehaviour": "disable",
+            "disable": false,
+            "value": "",
+            "hint": "Here, all the metadata is stored into fsimage and editlog files periodically.",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "text",
+            "label": "",
+            "id": "rpcAddress",
+            "width": "100%",
+            "dependentOn": { "key": "availabilty", "value": "" },
+            "dependentOnBehaviour": "disable",
+            "disable": false,
+            "placeholder": "RPC Address",
+            "class": "formFieldSpace",
+            "value": "",
+            "hint": "The address where the node listens on.",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "text",
+            "label": "",
+            "id": "secondaryNameNode",
+            "width": "100%",
+            "dependentOn": { "key": "availabilty", "value": "" },
+            "dependentOnBehaviour": "disable",
+            "disable": false,
+            "placeholder": "Secondary NameNode",
+            "class": "formFieldSpace",
+            "value": "",
+            "hint": "Take checkpoints of the file system metadata present on the NameNode",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "direction": "ltr",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "text",
+            "label": "",
+            "id": "rpcAddress2",
+            "width": "100%",
+            "dependentOn": { "key": "availabilty", "value": "" },
+            "dependentOnBehaviour": "disable",
+            "disable": false,
+            "placeholder": "RPC Address",
+            "class": "formFieldSpace",
+            "value": "",
+            "hint": "The address where the node listens on.",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "direction": "rtl",
+            "validation": {
+                "required": true
+            }
+        },
+
+        {
+            "type": "checkbox",
+            "label": "Authentication Type",
+            "id": "authenticationType",
+            "color": "primary",
+            "name": "authenticationType",
+            "width": "100%",
+            "disableRipple": false,
+            "labelPosition": "after",
+            "dependentOn":{"key":"hiddenField","value":"hdfs"},
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "options": [{
+                "value": "Kerberos",
+                "viewValue": "Kerberos",
+                "checked": true,
+                "disabled": false,
+                "indeterminate": false
+            }],
+            "validation": {}
+        },
+        {
+            "type": "file",
+            "label": "",
+            "id": "fileupload",
+            "width": "100%",
+            "dependentOn": { "key": "authenticationType", "value": "" },
+            "dependentOnBehaviour": "disable",
+            "disable": false,
+            "multiple": false,
+            "validFormats": [],
+            "totalCount": false,
+            "progressBar": false,
+            "dragAndDrop": false,
+            "uploadIcon": false,
+            "uploadIconType": "attach_file",
+            "uploadText": "UPLOAD",
+            "uploadTextVisible": true,
+            "uploadButton": false,
+            "deleteIcon": true,
+            "class": "formFieldSpace",
+            "deleteMessage": "Are you sure you want to delete this?",
+            "deleteDialogBox": true,
+            "error": true,
+            "errors": {
+                "fileDuplication": "Files Already Uploaded !!",
+                "fileSizeExceed": "File Size Exceeded!!",
+                "invalidFormat": "File is of invalid format",
+                "uploadLimitAtOnce": "Images greater than "
+            },
+            "fileUploadServerUrl": "",
+            "uploaderWidth": "100%",
+            "maximumLimitOfFile": 5,
+            "maximumFileSize": "",
+            "theme": "primary",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": false
+            }
+        },
+
+        {
+            "type": "text",
+            "label": "",
+            "id": "hostAddress",
+            "width": "100%",
+            "onChange": "editData",
+            "placeholder": "Host Address",
+            "dependentOn":{"key":"hiddenField","value":"teradata"},
+            "class": "formFieldSpace",
+            "value": "",
+            "hint": "IP address of the server host",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "text",
+            "label": "",
+            "id": "portNumber",
+            "width": "100%",
+            "onChange": "editData",
+            "placeholder": "Port Number",
+            "dependentOn":{"key":"hiddenField","value":"teradata"},
+            "class": "formFieldSpace",
+            "value": "",
+            "hint": "Port Number of the server host",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "text",
+            "label": "",
+            "id": "username",
+            "width": "100%",
+            "placeholder": "Username",
+            "class": "formFieldSpace",
+            "dependentOn":{"key":"hiddenField","value":"teradata"},
+            "value": "",
+            "hint": "Username of the user which will access the repository",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "password",
+            "label": "",
+            "id": "password",
+            "width": "100%",
+            "placeholder": "Password",
+            "class": "formFieldSpace",
+            "dependentOn":{"key":"hiddenField","value":"teradata"},
+            "value": "",
+            "hint": "Password of that user",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {
+                "required": true
+            }
+        },
+        {
+            "type": "chips",
+            "label": "",
+            "id": "tags",
+            "width": "100%",
+            "hidden": false,
+            "placeholder": "Tags",
+            "class": "chips",
+            "fieldLabel": "Tags",
+            "separatorKeysCodes": ["ENTER", "COMMA"],
+            "removable": true,
+            "value": [],
+            "addOnBlur": true,
+            "hint": "A category of your repository for quicker discovery",
+            "autoComplete": true,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "direction": "rtl",
+            "autocompleteConfig": {
+                "type": "auto",
+                "options": []
+            }
+        },
+        {
+            "type": "textarea",
+            "label": "",
+            "id": "description",
+            "width": "100%",
+            "placeholder": "Description",
+            "TextareaAutosize": true,
+            "minRows": 2,
+            "maxRows": 2,
+            "class": "formFieldSpace",
+            "value": "",
+            "limit": "250",
+            "hint": "More details about your repository",
+            "autoComplete": false,
+            "matIcon": "",
+            "displayType": "column",
+            "columnInSingleRow": "column-in-new-row",
+            "validation": {}
+        }
