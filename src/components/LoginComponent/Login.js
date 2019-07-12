@@ -30,8 +30,8 @@ class Login extends Component {
         return null;
     }
 
-    componentDidUpdate(props,state){
-        if(props.submit){
+    componentDidUpdate(prevProps,prevState,anapshot){
+        if(this.props.submit !== prevProps.submit){
             this.submit();
         }
     }
@@ -103,7 +103,6 @@ class Login extends Component {
        this.setState({
            elements:arr
        });
-    // this.state.elements=arr;
     }
 
     checkValidation(type,value){
