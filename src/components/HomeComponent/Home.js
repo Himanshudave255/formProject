@@ -2,24 +2,85 @@ import React, { Component } from 'react'
 import AboutUs from '../reusableComponents/AboutUs';
 import ContactUs from '../reusableComponents/ContactUs';
 import { Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import Data from '../../data/home.json';
+import { makeStyles } from '@material-ui/core/styles';
 import {myContext} from '../../App';
-const LinkStyle = {
+import TableComponent from '../reusableComponents/TableComponent';
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
+import Login from '../LoginComponent/Login';
+import DialogComponent from '../reusableComponents/DialogComponent';
+  const LinkStyle = { 
     float: 'right',
-    marginTop: -40
+    marginTop:-40
   };
+
+  const useStyles={
+    button: {
+      margin: 20 ,
+    },
+    input: {
+      display: 'none',
+    }
+  };
+
 class Home extends Component {
     constructor(props){
         super(props);
         this.myRef = React.createRef();
         this.state={
+            dialogStatus:false,
             loginStatus:props.loginStatus,
-            aboutUs:props.loginStatus?"We are an IT company since 1996":"Please Login to see this content"
+            aboutUs:props.loginStatus?"For more information Contact: Himanshu 9711046797":"Please Login to see this content",
+            triggerSubmit:false,
+            addDialogForm:{
+                //1st object
+                name:{value:"",id:"name",type:"text",label:"Enter your first name", placeholder:"Enter First Name" ,className:"text-field",margin:"normal",
+                helperText:{success:'Enter you First name',fail:'Invalid First Name'},
+                status:false,validators:{required:true,minLength:2,email:false,maxLength:20,custom:false},variant:"standard"},
+                //2nd object
+                surname:{value:"",id:"surname",type:"text",label:"surname", placeholder:"Enter surname",className:"text-field",margin:"normal",
+                helperText:{success:'Enter you surname',fail:'Invalid surname'},
+                status:false,validators:{required:true,minLength:2,maxLength:8},variant:"standard"},
+                //3rd object
+                designation:{value:"",id:"designation",type:"text", label:"Enter you designation", placeholder:"Enter designation" ,className:"text-field",margin:"normal",
+                helperText:{success:'Enter you designation',fail:'Invalid designation'},
+                status:false,validators:{required:true}, variant:"standard"},
+                //4th object
+                experience:{value:"",id:"experience",type:"text",label:"experience", placeholder:"Enter experience",className:"text-field",margin:"normal",
+                helperText:{success:'Enter you experience',fail:'experience is required'},
+                status:false,validators:{required:true},variant:"standard"},
+
+                department:{value:"",id:"department",type:"text",label:"department", placeholder:"Enter department",className:"text-field",margin:"normal",
+                helperText:{success:'Enter you department',fail:'Enter valid department'},
+                status:false,validators:{required:true},variant:"standard"},
+
+                age:{value:"",id:"age",type:"text",label:"age", placeholder:"Enter your age",className:"text-field",margin:"normal",
+                helperText:{success:'Enter you age',fail:'Enter valid age'},
+                status:false,validators:{maxLength:3},variant:"standard"}
+            },
+            rows:[],
+            columnKeys:[],
+            newRow:{}
         }
     }
     componentDidMount(){
         if(this.myRef.current){
-        this.myRef.current.style.fontSize="50px";
+        this.myRef.current.style.fontSize="25px";
         }
+        this.loadEmployeeData();
+    }
+    loadEmployeeData(){
+        let jsonData=[];
+        let keys;
+        keys=Object.keys(Data.data[0]);
+        this.setState({
+            rows:Data.data,
+            columnKeys:keys
+        });
+    }
+    createData(name, surname, designation, experience, department) {
+        return { name:name, surname:surname, designation:designation, experience:experience, department:department }
     }
     static getDerivedStateFromProps(props,state){
         if(props.loginStatus!=state.loginStatus){
@@ -29,10 +90,36 @@ class Home extends Component {
         }
         return null;
     }
+    addRow=()=>{
+        this.setState({
+            dialogStatus: true
+          });
+    }
+
+    formData=(status,formValue)=>{
+         this.setState({
+            newRow:{name:formValue.name, surname:formValue.surname, designation:formValue.designation, experience:formValue.experience, department:formValue.department, age:formValue.age?formValue.age:null},
+            dialogStatus:false
+        });
+      }
+
+    dialogClosedStatus=()=>{
+        this.setState({
+            dialogStatus: false
+          });
+    }
+
+    dialogCustomButtonClick=(status)=>{
+        this.setState({
+            triggerSubmit:true    
+        });
+    }
+    
     aboutus=()=>{
         this.props.history.push('/aboutus');
     }
     render() {
+        const actionButton={text:"ADD data", clickEvent:this.dialogCustomButtonClick}
         return (
             <div>
                 <Router>
@@ -41,14 +128,19 @@ class Home extends Component {
                     <Link to="/aboutus">About Us</Link>
                     <Link to="/contactus">Contact Us</Link>
                 </Router>
-           {
+                {
                     this.state.loginStatus ?
                     <div>
                     <div ref={this.myRef}>home</div> 
                     </div>
                     :
                     <Link style={LinkStyle} to="/">Sign Up</Link>
-           }
+                }
+                <TableComponent rows={this.state.rows} column={this.state.columnKeys} size="medium" addData={this.state.newRow}></TableComponent>
+                <Button variant="contained" onClick={this.addRow} style={useStyles.button}>ADD</Button>
+                <Button variant="contained" color="primary" style={useStyles.button}>UPDATE</Button>
+                <Button variant="contained" color="secondary" style={useStyles.button}>DELETE</Button>
+                <DialogComponent button={actionButton} dialogTitle="ADD DATA" dialogClosedStatus={this.dialogClosedStatus} content={<Login submit={this.state.triggerSubmit} submitButton={false} submitButtonText="ADD DATA" formOutput={this.formData} form={this.state.addDialogForm}/>} dialogStatus={this.state.dialogStatus}/>
            </div>
         )
     }

@@ -16,13 +16,14 @@ class InputField extends Component {
                 id={this.props.config.id?this.props.config.id:""}
                 error={this.props.config.error?this.props.config.error:false}
                 label={this.props.config.label?this.props.config.label:""}
+                fullWidth
                 placeholder={this.props.config.placeholder?this.state.config.placeholder:""}
                 className={this.props.config.className?this.props.config.className:""}
                 onChange={this.props.onChange}
                 value={this.props.config.value?this.props.config.value:""}
                 margin="normal"
                 helperText={this.props.config.helperText?this.props.config.helperText:""}
-                variant="outlined"
+                variant={this.props.config.variant?this.props.config.variant:"outlined"}
                 />
         </React.Fragment>
         )

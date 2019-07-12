@@ -7,12 +7,14 @@ import Home from './components/HomeComponent/Home';
 import * as serviceWorker from './serviceWorker';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import { createBrowserHistory } from "history";
+// import ReduxExample from './components/ReduxExample';
 
 const history = createBrowserHistory();
 const routing = (
     <Router history={history}>
       <div>
         <Route path="/" component={App} />
+         {/* to be removed later */}
       </div>
     </Router>
   )

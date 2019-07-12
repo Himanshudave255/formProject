@@ -7,6 +7,10 @@ import InputField from '../reusableComponents/InputField';
 import './Login.css';
 const styles={
     button:{
+        margin:10,
+        width:"100%"
+    },
+    textfield:{
         margin:10
     }
 };
@@ -17,6 +21,7 @@ class Login extends Component {
             valid:false,
             formValues:{},
             form:props.form,
+            submitButton:props.submitButton===false?false:true,
             elements:[]
          }
          this.setFormObject();
@@ -24,6 +29,13 @@ class Login extends Component {
     static getDerivedStateFromProps(props,state){
         return null;
     }
+
+    componentDidUpdate(props,state){
+        if(props.submit){
+            this.submit();
+        }
+    }
+
     setFormObject(){
         const states = {...this.state.form } ;
         for(let i=0;i<Object.keys(states).length;i++){
@@ -46,11 +58,11 @@ class Login extends Component {
          });
         }
     }
-    submit=(event)=>{
+    submit(){
         let key="";
         let counter=0;
         let updatedStatus=true;
-        event.preventDefault();
+        // event.preventDefault();
         for(let i=0;i<this.state.elements.length;i++){
             key =this.state.elements[i].config.id;
             updatedStatus = this.checkValidation(this.state.elements[i].config.id,this.state.elements[i].config.value);
@@ -91,6 +103,7 @@ class Login extends Component {
        this.setState({
            elements:arr
        });
+    // this.state.elements=arr;
     }
 
     checkValidation(type,value){
@@ -139,12 +152,15 @@ class Login extends Component {
     render() {
         return (
             <div>
-                <div className="login">
+                <div className={this.props.formClass}>
                 <form className="form">
                 {this.state.elements.map((value,index) => {
                     return <InputField key={index} config={value.config} onChange={this.changeEvent.bind(this,value.eventChange)}></InputField>
                 })}
-                <Button type="submit" onClick={this.submit} variant="contained" style={styles.button} className="text-field" color="primary">Submit</Button>
+                {
+                this.state.submitButton?
+                <Button type="button" onClick={this.submit.bind(this)} variant="contained" style={styles.button} color="primary">{this.props.submitButtonText?this.props.submitButtonText:"SUBMIT"}</Button>
+                :null}
                 </form>
                 </div>
             </div>

@@ -8,7 +8,7 @@ import { Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom
 // import { createBrowserHistory } from "history";
 import AboutUs from './components/reusableComponents/AboutUs';
 // const history = createBrowserHistory();
-export const myContext=React.createContext('bye to');
+export const myContext=React.createContext();
 
 export default class App extends Component {
   constructor(props){
@@ -60,9 +60,9 @@ export default class App extends Component {
     <div className="App">
     <Router>
       <Header heading={this.state.heading}></Header>
-      <Route exact path="/" render={()=>(<Login custom={customValidation} form={this.state.form} formOutput={this.formData}/>)} />
-      <myContext.Provider>
-       <Route path="/home" render={()=>(<Home history={this.props.history} loginStatus={this.state.loginUserStatus}/>)} />
+      <Route exact path="/" render={()=>(<Login formClass="sign-up-class" custom={customValidation} form={this.state.form} formOutput={this.formData}/>)} />
+      <myContext.Provider value="this is impetus, an IT company.">
+      <Route path="/home" render={()=>(<Home history={this.props.history} loginStatus={this.state.loginUserStatus}/>)} />
       </myContext.Provider>
       {this.state.loginUserStatus?
       <div>
@@ -72,7 +72,6 @@ export default class App extends Component {
       />
       </div>:null
       }
-
     </Router>
     </div>
     )
