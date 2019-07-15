@@ -57,11 +57,18 @@ class Home extends Component {
 
                 age:{value:"",id:"age",type:"text",label:"age", placeholder:"Enter your age",className:"text-field",margin:"normal",
                 helperText:{success:'Enter you age',fail:'Enter valid age'},
-                status:false,validators:{maxLength:3},variant:"standard"}
+                status:false,validators:{maxLength:3},variant:"standard"},
+
+                id:{value:"",id:"id",type:"number",label:"id", placeholder:"Enter your id",className:"text-field",margin:"normal",
+                helperText:{success:'Enter you id',fail:'Enter valid id'},
+                status:false,validators:{maxLength:10},variant:"standard"}  
             },
             rows:[],
+            deletedRowsArray:[],
             columnKeys:[],
-            newRow:{}
+            newRow:{},
+            updateButtonDisable:true,
+            deleteButtonDisable:true
         }
     }
     componentDidMount(){
@@ -76,11 +83,11 @@ class Home extends Component {
         keys=Object.keys(Data.data[0]);
         this.setState({
             rows:Data.data,
-            columnKeys:keys
+            columnKeys:["name","surname","designation","experience","department","age"]
         });
     }
-    createData(name, surname, designation, experience, department) {
-        return { name:name, surname:surname, designation:designation, experience:experience, department:department }
+    createData(name, id, surname, designation, experience, department) {
+        return { name:name, id:id, surname:surname, designation:designation, experience:experience, department:department }
     }
     static getDerivedStateFromProps(props,state){
         if(props.loginStatus!=state.loginStatus){
@@ -98,7 +105,7 @@ class Home extends Component {
 
     formData=(status,formValue)=>{
          this.setState({
-            newRow:{name:formValue.name, surname:formValue.surname, designation:formValue.designation, experience:formValue.experience, department:formValue.department, age:formValue.age?formValue.age:null},
+            newRow:{name:formValue.name, id:formValue.id, surname:formValue.surname, designation:formValue.designation, experience:formValue.experience, department:formValue.department, age:formValue.age?formValue.age:null},
             dialogStatus:false
         });
       }
@@ -118,6 +125,21 @@ class Home extends Component {
     aboutus=()=>{
         this.props.history.push('/aboutus');
     }
+    deletedItem=(arrayOfDeletedItem)=>{
+        this.setState({
+            deletedRowsArray:arrayOfDeletedItem,
+            deleteButtonDisable:arrayOfDeletedItem.length?false:true
+        });
+    }
+
+    deleteRows=()=>{
+        this.setState({
+            rows:this.state.rows.filter(obj=>{
+                return !this.state.deletedRowsArray.includes(obj.id)
+            }),
+            
+        });           
+    }
     render() {
         const actionButton={text:"ADD data", clickEvent:this.dialogCustomButtonClick}
         return (
@@ -136,10 +158,10 @@ class Home extends Component {
                     :
                     <Link style={LinkStyle} to="/">Sign Up</Link>
                 }
-                <TableComponent rows={this.state.rows} column={this.state.columnKeys} size="medium" addData={this.state.newRow}></TableComponent>
+                <TableComponent setDeleteItem={this.deletedItem} rows={this.state.rows} column={this.state.columnKeys} size="medium" addData={this.state.newRow}></TableComponent>
                 <Button variant="contained" onClick={this.addRow} style={useStyles.button}>ADD</Button>
-                <Button variant="contained" color="primary" style={useStyles.button}>UPDATE</Button>
-                <Button variant="contained" color="secondary" style={useStyles.button}>DELETE</Button>
+                <Button variant="contained" color="primary" disabled={this.state.updateButtonDisable} style={useStyles.button}>UPDATE</Button>
+                <Button variant="contained" onClick={this.deleteRows} color="secondary" disabled={this.state.deleteButtonDisable} style={useStyles.button}>{this.state.deletedRowsArray.length>1?"DELETE MULTIPLE":"DELETE"}</Button>
                 <DialogComponent button={actionButton} dialogTitle="ADD DATA" dialogClosedStatus={this.dialogClosedStatus} content={<Login submit={this.state.triggerSubmit} submitButton={false} submitButtonText="ADD DATA" formOutput={this.formData} form={this.state.addDialogForm}/>} dialogStatus={this.state.dialogStatus}/>
            </div>
         )
