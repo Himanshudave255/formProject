@@ -7,6 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
+import { setTimeout } from 'timers';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -49,7 +50,7 @@ function getSorting(order, orderBy) {
 
 function TableComponent(props) {
   const [size, updateSize] = useState(props.size?props.size:"medium");
-  const [userow, updateRow] = useState(props.rows);
+  const [userow, updateRow] = useState(props.rows.map(res=>res.checked=false));
   const columnValue=props.column;
   const columnValueLength=columnValue.length;
   const classes = useStyles();
@@ -57,30 +58,41 @@ function TableComponent(props) {
   const [checkAllRows,updateCheckAllRows]=useState(false);
 
   function onRowSelect(id){
-    let updateDeletedArray=[];
-    let deleteIndex=deleteItemIndex;
-    if(deleteItemIndex.includes(id)){
-      updateDeletedArray=deleteItemIndex.filter(arrid=>{
-        return arrid!=id
-      })
-    }
-    else{
-      deleteIndex.push(id);
-      updateDeletedArray=deleteIndex;
-    }
-    updateDeleteItemIndex(updateDeletedArray);
-    props.setDeleteItem(updateDeletedArray);
+    let arr=[];
+    let deletedArr=[];
+    arr=userow.map(val=>{
+      if(val.id===id){
+        val.checked?
+        val={...val,checked:false}
+        :
+        val={...val,checked:true}
+      }
+      return val
+    });
+    deletedArr=arr.filter(res=>{return res.checked});
+    updateDeleteItemIndex(deletedArr);
+    props.setDeleteItem(deletedArr);
+    updateRow(arr);
   }
 
   function onColumCheckBoxSelect(){
-    let idArray=[];
+    let rowArray=[];
     if(checkAllRows){
       updateCheckAllRows(false);
+      rowArray=userow.map(val=>{
+          val={...val,checked:false}
+          return val
+    });
+    props.setDeleteItem([]);
     }else{
       updateCheckAllRows(true);
+      rowArray=userow.map(val=>{
+          val={...val,checked:true}
+          return val
+    });
+    props.setDeleteItem(rowArray);
     }
-    idArray=userow.map(res=>{return res.id});
-    props.setDeleteItem(idArray);
+    updateRow(rowArray);
   }
 
   useEffect(() => {
@@ -96,8 +108,7 @@ function TableComponent(props) {
     }
   },[props.rows,props.addData]);
 
-    return (
-      
+    return (      
     <div>
       <Table size={size} className={classes.table}> 
         <TableHead>
@@ -117,12 +128,12 @@ function TableComponent(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {
+          { 
             userow.map((row,index) => (
             <TableRow key={row.id?row.id:columnValueLength+1}>
             <TableCell padding="checkbox">
              <Checkbox
-             checked={checkAllRows}
+             checked={row.checked}
              inputProps={{ 'aria-labelledby': 1 }}
              onChange={onRowSelect.bind(this,row.id)}
              />

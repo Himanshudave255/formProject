@@ -126,6 +126,7 @@ class Home extends Component {
         this.props.history.push('/aboutus');
     }
     deletedItem=(arrayOfDeletedItem)=>{
+        console.log("del",arrayOfDeletedItem);
         this.setState({
             deletedRowsArray:arrayOfDeletedItem,
             deleteButtonDisable:arrayOfDeletedItem.length?false:true
@@ -133,11 +134,18 @@ class Home extends Component {
     }
 
     deleteRows=()=>{
+        let arr=[];
+        this.state.rows.forEach(obj1=>
+            this.state.deletedRowsArray.forEach(obj2=>{
+                if(obj1.id!=obj2.id){
+                    // if(!arr.includes(obj2)){
+                    arr.push(obj2);
+                    // }
+                }
+            })
+        )
         this.setState({
-            rows:this.state.rows.filter(obj=>{
-                return !this.state.deletedRowsArray.includes(obj.id)
-            }),
-            
+            rows:arr  
         });           
     }
     render() {
