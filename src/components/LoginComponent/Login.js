@@ -49,6 +49,7 @@ class Login extends Component {
             placeholder:states[key].placeholder,
             className:states[key].className,
             value:states[key].value,
+            disable:states[key].disable,
             margin:states[key].margin,
             helperText:!states[key].status?states[key].helperText.success:states[key].helperText.fail,
             variant:states[key].variant,
@@ -83,6 +84,9 @@ class Login extends Component {
                 this.props.formOutput(true,this.state.formValues);
             });
         }
+        else{
+            this.props.formOutput(false,undefined);
+        }
     }
 
     changeEvent(type,event){
@@ -108,6 +112,9 @@ class Login extends Component {
     checkValidation(type,value){
         let status=false;
         let validators=this.state.form[type].validators;
+        if(typeof(value)==="number"){
+            value=value.toString();
+        }
         if(Object.keys(validators).length){
             if(validators.required){
                 if(value.length>0){

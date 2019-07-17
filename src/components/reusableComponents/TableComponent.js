@@ -3,6 +3,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,33 +25,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
 function TableComponent(props) {
   const [size, updateSize] = useState(props.size?props.size:"medium");
   const [userow, updateRow] = useState(props.rows.map(res=>res.checked=false));
+  const [order, updateOrder]=useState("asc");
   const columnValue=props.column;
   const columnValueLength=columnValue.length;
   const classes = useStyles();
@@ -96,18 +74,25 @@ function TableComponent(props) {
   }
 
   useEffect(() => {
-    if(Object.keys(props.addData).length!=0){
-      if(typeof(props.addData.id)==="string"){
-        props.addData.id=JSON.parse(props.addData.id);
-      }
-      const newArr = [...userow,props.addData];
-      updateRow(newArr);
-    }
-    else{ 
       updateRow(props.rows);
-    }
-  },[props.rows,props.addData]);
+  },[props.rows]);
 
+  const createSortHandler = property => event => {
+      userow.sort(function(a=0, b){
+      var nameA=typeof(a[property])==="number" ? a[property]: a[property].toLowerCase(), nameB=typeof(b[property])==="number" ? b[property]: b[property].toLowerCase()
+      if (nameA < nameB)
+          return -1 
+      if (nameA > nameB)
+          return 1
+      return 0; 
+      });
+      if(order==="desc"){
+      userow.reverse();
+  }
+  
+  updateOrder(order==="asc"?"desc":"asc");
+  updateRow(userow);
+  };
     return (      
     <div>
       <Table size={size} className={classes.table}> 
@@ -122,7 +107,12 @@ function TableComponent(props) {
             </TableCell>
             {
               props.column.map((column,index)=>(
-                <TableCell key={column} className={classes.column}>{column}</TableCell>
+                <TableCell key={column} className={classes.column}><TableSortLabel
+                direction={order}
+                onClick={createSortHandler(column)}
+              >
+                {column}
+              </TableSortLabel></TableCell>
               ))
             }
           </TableRow>
@@ -133,7 +123,7 @@ function TableComponent(props) {
             <TableRow key={row.id?row.id:columnValueLength+1}>
             <TableCell padding="checkbox">
              <Checkbox
-             checked={row.checked}
+             checked={row.checked?row.checked:false}
              inputProps={{ 'aria-labelledby': 1 }}
              onChange={onRowSelect.bind(this,row.id)}
              />
@@ -155,3 +145,4 @@ function TableComponent(props) {
 }
 
 export default TableComponent
+

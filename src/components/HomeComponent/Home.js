@@ -41,7 +41,7 @@ class Home extends Component {
                 //2nd object
                 surname:{value:"",id:"surname",type:"text",label:"surname", placeholder:"Enter surname",className:"text-field",margin:"normal",
                 helperText:{success:'Enter you surname',fail:'Invalid surname'},
-                status:false,validators:{required:true,minLength:2,maxLength:8},variant:"standard"},
+                status:false,validators:{required:true,minLength:2},variant:"standard"},
                 //3rd object
                 designation:{value:"",id:"designation",type:"text", label:"Enter you designation", placeholder:"Enter designation" ,className:"text-field",margin:"normal",
                 helperText:{success:'Enter you designation',fail:'Invalid designation'},
@@ -63,15 +63,19 @@ class Home extends Component {
                 helperText:{success:'Enter you id',fail:'Enter valid id'},
                 status:false,validators:{maxLength:10},variant:"standard"}  
             },
+            intialDialogForm:{},
+            dialogTitle:"",
             rows:[],
             deletedRowsArray:[],
             columnKeys:[],
-            newRow:{},
             updateButtonDisable:true,
             deleteButtonDisable:true
         }
     }
     componentDidMount(){
+        this.setState({
+            intialDialogForm:{...this.state.addDialogForm}
+        })
         if(this.myRef.current){
         this.myRef.current.style.fontSize="25px";
         }
@@ -99,15 +103,50 @@ class Home extends Component {
     }
     addRow=()=>{
         this.setState({
-            dialogStatus: true
+            addDialogForm:{...this.state.intialDialogForm},
+            dialogStatus: true,
+            deleteButtonDisable:true,
+            updateButtonDisable:true,
+            dialogTitle:"ADD DATA",
+            submitButtonText:"ADD"
           });
     }
 
+    updateRow=()=>{
+        this.setState({
+            dialogStatus:true,
+            deleteButtonDisable:true,
+            dialogTitle:"UPDATE DATA",
+            submitButtonText:"UPDATE"
+        })
+    }
+
     formData=(status,formValue)=>{
+        let updatedArray=[];
+        let obj={name:formValue.name, id:formValue.id, surname:formValue.surname, designation:formValue.designation,
+            experience:formValue.experience, department:formValue.department, age:formValue.age?formValue.age:""};
+         if(!this.state.updateButtonDisable){
+            updatedArray=this.state.rows.map(res=>{
+                 if(res.id===formValue.id){
+                     return obj;
+                 }
+                 else{
+                     return res;
+                 }
+             });
+             this.setState({
+                rows:[...updatedArray],
+                dialogStatus:false,
+                updateButtonDisable:true
+            }); 
+         }
+         else{
          this.setState({
-            newRow:{name:formValue.name, id:formValue.id, surname:formValue.surname, designation:formValue.designation, experience:formValue.experience, department:formValue.department, age:formValue.age?formValue.age:null},
-            dialogStatus:false
+            rows:[...this.state.rows,obj],
+            dialogStatus:false,
+            updateButtonDisable:true
         });
+      }
       }
 
     dialogClosedStatus=()=>{
@@ -126,30 +165,45 @@ class Home extends Component {
         this.props.history.push('/aboutus');
     }
     deletedItem=(arrayOfDeletedItem)=>{
-        console.log("del",arrayOfDeletedItem);
+        let formData={...this.state.addDialogForm}
+        let length=arrayOfDeletedItem.length;
         this.setState({
             deletedRowsArray:arrayOfDeletedItem,
-            deleteButtonDisable:arrayOfDeletedItem.length?false:true
+            deleteButtonDisable:length?false:true,
+            updateButtonDisable:length===1?false:true
         });
+        if(length===1){
+            this.setState({
+                addDialogForm:{...formData,
+                name:{...formData.name,value:arrayOfDeletedItem[0].name},
+                surname:{...formData.surname,value:arrayOfDeletedItem[0].surname},
+                designation:{...formData.designation,value:arrayOfDeletedItem[0].designation},
+                experience:{...formData.experience,value:arrayOfDeletedItem[0].experience},
+                department:{...formData.department,value:arrayOfDeletedItem[0].department},
+                age:{...formData.age,value:arrayOfDeletedItem[0].age},
+                id:{...formData.id,value:arrayOfDeletedItem[0].id,disable:true}
+            }
+            })
+        }
     }
 
     deleteRows=()=>{
-        let arr=[];
-        this.state.rows.forEach(obj1=>
+        let updarray=[...this.state.rows];
+        this.state.rows.forEach((obj1,index)=>{
             this.state.deletedRowsArray.forEach(obj2=>{
-                if(obj1.id!=obj2.id){
-                    // if(!arr.includes(obj2)){
-                    arr.push(obj2);
-                    // }
-                }
+                if(obj1.id===obj2.id){
+                    updarray[index]=null;
+                }  
             })
-        )
+        });
         this.setState({
-            rows:arr  
-        });           
+            rows:updarray.filter(res=>{if(res!=null){return res}}),
+            deleteButtonDisable:true,
+            updateButtonDisable:true
+        });                  
     }
     render() {
-        const actionButton={text:"ADD data", clickEvent:this.dialogCustomButtonClick}
+        let actionButton={text:this.state.submitButtonText, clickEvent:this.dialogCustomButtonClick}
         return (
             <div>
                 <Router>
@@ -166,14 +220,17 @@ class Home extends Component {
                     :
                     <Link style={LinkStyle} to="/">Sign Up</Link>
                 }
-                <TableComponent setDeleteItem={this.deletedItem} rows={this.state.rows} column={this.state.columnKeys} size="medium" addData={this.state.newRow}></TableComponent>
+                <TableComponent setDeleteItem={this.deletedItem} rows={this.state.rows} column={this.state.columnKeys} size="medium"></TableComponent>
                 <Button variant="contained" onClick={this.addRow} style={useStyles.button}>ADD</Button>
-                <Button variant="contained" color="primary" disabled={this.state.updateButtonDisable} style={useStyles.button}>UPDATE</Button>
+                <Button variant="contained" color="primary" onClick={this.updateRow} disabled={this.state.updateButtonDisable} style={useStyles.button}>UPDATE</Button>
                 <Button variant="contained" onClick={this.deleteRows} color="secondary" disabled={this.state.deleteButtonDisable} style={useStyles.button}>{this.state.deletedRowsArray.length>1?"DELETE MULTIPLE":"DELETE"}</Button>
-                <DialogComponent button={actionButton} dialogTitle="ADD DATA" dialogClosedStatus={this.dialogClosedStatus} content={<Login submit={this.state.triggerSubmit} submitButton={false} submitButtonText="ADD DATA" formOutput={this.formData} form={this.state.addDialogForm}/>} dialogStatus={this.state.dialogStatus}/>
+                <DialogComponent button={actionButton} dialogTitle={this.state.dialogTitle} dialogClosedStatus={this.dialogClosedStatus} 
+                content={<Login submit={this.state.triggerSubmit} submitButton={false} formOutput={this.formData}
+                form={this.state.addDialogForm}/>} dialogStatus={this.state.dialogStatus}/>
            </div>
         )
     }
 }
 
 export default Home
+

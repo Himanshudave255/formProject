@@ -17,6 +17,7 @@ class InputField extends Component {
                 error={this.props.config.error?this.props.config.error:false}
                 label={this.props.config.label?this.props.config.label:""}
                 fullWidth
+                disabled={this.props.config.disable?this.props.config.disable:false}
                 placeholder={this.props.config.placeholder?this.state.config.placeholder:""}
                 className={this.props.config.className?this.props.config.className:""}
                 onChange={this.props.onChange}

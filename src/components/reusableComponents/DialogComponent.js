@@ -25,7 +25,7 @@ function DialogComponent(props) {
     const [dialogStatus, updateDialogStatus]= useState(props.dialogStatus?props.dialogStatus:false);
     const handleClose = () => {
         updateDialogStatus(false);        
-        props.dialogClosedStatus();
+        props.dialogClosedStatus(false);
     };
     const handleUserClick= () =>{
       props.button.clickEvent(true);
