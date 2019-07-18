@@ -8,8 +8,10 @@ import {myContext} from '../../App';
 import TableComponent from '../reusableComponents/TableComponent';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import Login from '../LoginComponent/Login';
+import RUCforms from '../RUCformsComponent/RUCforms';
 import DialogComponent from '../reusableComponents/DialogComponent';
+// import AutoComplete  from '@material-ui/AutoComplete';
+// import SearchBar from 'material-ui-search-bar';
   const LinkStyle = { 
     float: 'right',
     marginTop:-40
@@ -33,6 +35,7 @@ class Home extends Component {
             loginStatus:props.loginStatus,
             aboutUs:props.loginStatus?"For more information Contact: Himanshu 9711046797":"Please Login to see this content",
             triggerSubmit:false,
+            addUpdateDialogSubmitStatus:false,
             addDialogForm:{
                 //1st object
                 name:{value:"",id:"name",type:"text",label:"Enter your first name", placeholder:"Enter First Name" ,className:"text-field",margin:"normal",
@@ -106,6 +109,7 @@ class Home extends Component {
             addDialogForm:{...this.state.intialDialogForm},
             dialogStatus: true,
             deleteButtonDisable:true,
+            triggerSubmit:false,
             updateButtonDisable:true,
             dialogTitle:"ADD DATA",
             submitButtonText:"ADD"
@@ -115,6 +119,7 @@ class Home extends Component {
     updateRow=()=>{
         this.setState({
             dialogStatus:true,
+            triggerSubmit:false,
             deleteButtonDisable:true,
             dialogTitle:"UPDATE DATA",
             submitButtonText:"UPDATE"
@@ -122,6 +127,7 @@ class Home extends Component {
     }
 
     formData=(status,formValue)=>{
+        if(formValue && status){
         let updatedArray=[];
         let obj={name:formValue.name, id:formValue.id, surname:formValue.surname, designation:formValue.designation,
             experience:formValue.experience, department:formValue.department, age:formValue.age?formValue.age:""};
@@ -137,17 +143,25 @@ class Home extends Component {
              this.setState({
                 rows:[...updatedArray],
                 dialogStatus:false,
-                updateButtonDisable:true
+                updateButtonDisable:true,
+                addUpdateDialogSubmitStatus:false
             }); 
          }
          else{
          this.setState({
             rows:[...this.state.rows,obj],
             dialogStatus:false,
+            addUpdateDialogSubmitStatus:false,
             updateButtonDisable:true
         });
       }
-      }
+     }
+     else{
+         this.setState({
+             addUpdateDialogSubmitStatus:true
+         });
+     }
+    }
 
     dialogClosedStatus=()=>{
         this.setState({
@@ -156,9 +170,18 @@ class Home extends Component {
     }
 
     dialogCustomButtonClick=(status)=>{
-        this.setState({
-            triggerSubmit:true    
-        });
+        if(this.state.addUpdateDialogSubmitStatus && this.state.triggerSubmit){
+            this.setState({
+                triggerSubmit:false,
+                addUpdateDialogSubmitStatus:false
+            });
+        }
+        else{
+            this.setState({
+                triggerSubmit:true    
+            }); 
+        }
+       
     }
     
     aboutus=()=>{
@@ -220,12 +243,13 @@ class Home extends Component {
                     :
                     <Link style={LinkStyle} to="/">Sign Up</Link>
                 }
+                {/* <SearchBar onChange={() => console.log('onChange')} onRequestSearch={() => console.log('onRequestSearch')}/> */}
                 <TableComponent setDeleteItem={this.deletedItem} rows={this.state.rows} column={this.state.columnKeys} size="medium"></TableComponent>
                 <Button variant="contained" onClick={this.addRow} style={useStyles.button}>ADD</Button>
                 <Button variant="contained" color="primary" onClick={this.updateRow} disabled={this.state.updateButtonDisable} style={useStyles.button}>UPDATE</Button>
                 <Button variant="contained" onClick={this.deleteRows} color="secondary" disabled={this.state.deleteButtonDisable} style={useStyles.button}>{this.state.deletedRowsArray.length>1?"DELETE MULTIPLE":"DELETE"}</Button>
                 <DialogComponent button={actionButton} dialogTitle={this.state.dialogTitle} dialogClosedStatus={this.dialogClosedStatus} 
-                content={<Login submit={this.state.triggerSubmit} submitButton={false} formOutput={this.formData}
+                content={<RUCforms submit={this.state.triggerSubmit} submitButton={false} formOutput={this.formData}
                 form={this.state.addDialogForm}/>} dialogStatus={this.state.dialogStatus}/>
            </div>
         )

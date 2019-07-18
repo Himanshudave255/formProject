@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import InputField from '../reusableComponents/InputField';
-import './Login.css';
+import './RUCforms.css';
 const styles={
     button:{
         margin:10,
@@ -14,7 +14,7 @@ const styles={
         margin:10
     }
 };
-class Login extends Component {
+class RUCforms extends Component {
     constructor (props) {
         super(props);
         this.state={
@@ -63,7 +63,6 @@ class Login extends Component {
         let key="";
         let counter=0;
         let updatedStatus=true;
-        // event.preventDefault();
         for(let i=0;i<this.state.elements.length;i++){
             key =this.state.elements[i].config.id;
             updatedStatus = this.checkValidation(this.state.elements[i].config.id,this.state.elements[i].config.value);
@@ -173,4 +172,4 @@ class Login extends Component {
         )
     }
 }
-export default  Login
+export default  RUCforms

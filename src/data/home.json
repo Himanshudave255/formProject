@@ -3,6 +3,7 @@
         {
             "name":"himanshu",
             "surname":"dave",
+            "email":"himansh@impetus.com",
             "designation":"Associate",
             "experience":1,
             "id":1,
@@ -13,36 +14,10 @@
             "name":"uddeshya",
             "id":2,
             "surname":"chaudhary",
+            "email":"himanshu.dave@impetus.co.in",
             "designation":"Trainee",
             "experience":0,
             "department":"UI",
-            "age":20
-        },
-        {
-            "name":"Maneesh",
-            "id":3,
-            "surname":"sharma",
-            "designation":"senior",
-            "experience":10,
-            "department":"UI",
-            "age":20
-        },
-        {
-            "name":"noopur",
-            "id":4,
-            "surname":"bansal",
-            "designation":"UI Enginner",    
-            "experience":7,
-            "department":"UI",
-            "age":27
-        },
-        {
-            "name":"atul",
-            "id":5,
-            "surname":"hum",
-            "designation":"Trainee Enginner",
-            "experience":0,
-            "department":"UX",
             "age":20
         }
     ]

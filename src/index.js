@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Login from './components/LoginComponent/Login';
+import RUCforms from './components/RUCformsComponent/RUCforms';
 import Home from './components/HomeComponent/Home';
 import * as serviceWorker from './serviceWorker';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
