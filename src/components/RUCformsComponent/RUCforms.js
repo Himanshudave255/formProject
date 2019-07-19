@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import InputField from '../reusableComponents/InputField';
 import './RUCforms.css';
+import Selectbox from '../reusableComponents/Selectbox';
 const styles={
     button:{
         margin:10,
@@ -30,7 +31,7 @@ class RUCforms extends Component {
         return null;
     }
 
-    componentDidUpdate(prevProps,prevState,anapshot){
+    componentDidUpdate(prevProps,prevState,snapshot){
         if(this.props.submit !== prevProps.submit){
             this.submit();
         }
@@ -49,6 +50,7 @@ class RUCforms extends Component {
             placeholder:states[key].placeholder,
             className:states[key].className,
             value:states[key].value,
+            options:states[key].type==="select"?states[key].options:null,
             disable:states[key].disable,
             margin:states[key].margin,
             helperText:!states[key].status?states[key].helperText.success:states[key].helperText.fail,
@@ -91,6 +93,11 @@ class RUCforms extends Component {
     changeEvent(type,event){
         let updatedStatus=this.checkValidation(type,event.currentTarget.value);
         this.setFormState(updatedStatus,type,event.currentTarget.value);
+    }
+
+    selectChangeEvent(type,event){
+        let updatedStatus=this.checkValidation(type,event.currentTarget.textContent);
+        this.setFormState(updatedStatus,type,event.currentTarget.textContent);
     }
 
     setFormState(updatedStatus,type,value){
@@ -160,7 +167,9 @@ class RUCforms extends Component {
                 <div className={this.props.formClass}>
                 <form className="form">
                 {this.state.elements.map((value,index) => {
-                    return <InputField key={index} config={value.config} onChange={this.changeEvent.bind(this,value.eventChange)}></InputField>
+                    return value.config.type==="select"?
+                    <Selectbox  onChange={this.selectChangeEvent.bind(this,value.eventChange)} config={value.config} key={index}></Selectbox>:
+                    <InputField key={index} config={value.config} onChange={this.changeEvent.bind(this,value.eventChange)}></InputField>
                 })}
                 {
                 this.state.submitButton?

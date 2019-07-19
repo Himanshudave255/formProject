@@ -2,23 +2,27 @@
     "data":[
         {
             "name":"himanshu",
-            "surname":"dave",
-            "email":"himansh@impetus.com",
+            "email":"himanshu.dave@impetus.co.in",
             "designation":"Associate",
-            "experience":1,
-            "id":1,
-            "department":"UI",
-            "age":20
+            "password":"dave",
+            "userId":"I3896",
+            "role":"Employee"
         },
         {
             "name":"uddeshya",
-            "id":2,
-            "surname":"chaudhary",
-            "email":"himanshu.dave@impetus.co.in",
+            "email":"uddeshya.chaudhary@impetus.co.in",
             "designation":"Trainee",
-            "experience":0,
-            "department":"UI",
-            "age":20
+            "password":"dave",
+            "userId":"I3897",
+            "role":"Employee"
+        },
+        {
+            "name":"atul",
+            "email":"atul.singh@impetus.co.in",
+            "designation":"Trainee",
+            "password":"dave",
+            "userId":"I3898",
+            "role":"Employee"
         }
     ]
 }

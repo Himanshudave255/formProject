@@ -39,7 +39,7 @@ function TableComponent(props) {
     let arr=[];
     let deletedArr=[];
     arr=userow.map(val=>{
-      if(val.id===id){
+      if(val[props.keyProp]===id){
         val.checked?
         val={...val,checked:false}
         :
@@ -89,7 +89,6 @@ function TableComponent(props) {
       if(order==="desc"){
       userow.reverse();
   }
-  
   updateOrder(order==="asc"?"desc":"asc");
   updateRow(userow);
   };
@@ -120,18 +119,18 @@ function TableComponent(props) {
         <TableBody>
           { 
             userow.map((row,index) => (
-            <TableRow key={row.id?row.id:columnValueLength+1}>
+            <TableRow key={row[props.keyProp]?row[props.keyProp]:columnValueLength+1}>
             <TableCell padding="checkbox">
              <Checkbox
              checked={row.checked?row.checked:false}
              inputProps={{ 'aria-labelledby': 1 }}
-             onChange={onRowSelect.bind(this,row.id)}
+             onChange={onRowSelect.bind(this,row[props.keyProp])}
              />
              </TableCell>
               {
                 Object.keys(row).map((row1,index1)=>(
                   index1<columnValueLength?
-                  <TableCell key={(row.id?row.id:columnValueLength+1)+index1} className={classes.column}>{row[columnValue[index1]]}</TableCell>
+                  <TableCell key={(row[props.keyProp]?row[props.keyProp]:columnValueLength+1)+index1} className={classes.column}>{row[columnValue[index1]]}</TableCell>
                   :null
                 ))
               }

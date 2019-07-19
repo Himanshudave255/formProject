@@ -1,0 +1,11 @@
+.crud-text{
+    margin-top: 50px;
+    font-size: 20px;
+    color: red
+}
+
+.logout-user{
+    position: absolute;
+    top: 10px;
+    margin-left: 47%;
+}
