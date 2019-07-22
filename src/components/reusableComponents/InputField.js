@@ -22,6 +22,7 @@ class InputField extends Component {
                 className={this.props.config.className?this.props.config.className:""}
                 onChange={this.props.onChange}
                 value={this.props.config.value?this.props.config.value:""}
+                name={this.props.config.name?this.props.config.name:""}
                 margin="normal"
                 helperText={this.props.config.helperText?this.props.config.helperText:""}
                 variant={this.props.config.variant?this.props.config.variant:"outlined"}

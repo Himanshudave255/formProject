@@ -6,7 +6,8 @@
             "designation":"Associate",
             "password":"dave",
             "userId":"I3896",
-            "role":"Employee"
+            "role":"Employee",
+            "issueArray":[{"issue":"Need Mouse","status":true,"assigned":"manas"},{"issue":"Need Keyboard","status":false,"assigned":"trivedi"}]
         },
         {
             "name":"uddeshya",
@@ -14,7 +15,8 @@
             "designation":"Trainee",
             "password":"dave",
             "userId":"I3897",
-            "role":"Employee"
+            "role":"Employee",
+            "issueArray":[{"issue":"Need windows 10","status":true,"assigned":"manas"},{"issue":"Need windows 11","status":false,"assigned":"manas"}]
         },
         {
             "name":"atul",
@@ -22,7 +24,8 @@
             "designation":"Trainee",
             "password":"dave",
             "userId":"I3898",
-            "role":"Employee"
+            "role":"Employee",
+            "issueArray":[{"issue":"Need headphone","status":false,"assigned":"manas"},{"issue":"Need speaker","status":true,"assigned":"manas"}]
         }
     ]
 }

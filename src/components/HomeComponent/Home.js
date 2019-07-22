@@ -27,7 +27,6 @@ import DialogComponent from '../reusableComponents/DialogComponent';
 
 class Home extends Component {
     constructor(props){
-        console.log("das",props);
         super(props);
         this.myRef = React.createRef();
         this.state={
@@ -81,7 +80,7 @@ class Home extends Component {
         let jsonData=[];
         this.setState({
             rows:this.getLocalStorageData(),
-            columnKeys:["name","email","designation","role","userId"]
+            columnKeys:["name","email","designation","role","userId","Issues"]
         });
     }
     static getDerivedStateFromProps(props,state){
@@ -184,6 +183,10 @@ class Home extends Component {
     
     logout=()=>{
         localStorage.removeItem("currentLogin");
+        this.props.logoutStatus(true);
+    }
+    routeToIssue(obj,index){
+        this.props.openIssue(obj,index);
     }
     deletedItem=(arrayOfDeletedItem)=>{
         let formData={...this.state.addDialogForm}
@@ -235,11 +238,22 @@ class Home extends Component {
         let currentLoginUser=JSON.parse(localStorage.getItem("currentLogin"));
         dataArray=JSON.parse(localStorage.getItem("Data"));
         if(currentLoginUser && currentLoginUser.role==="Employee"){
-            newDataArray=dataArray.filter(res=>{
+            newDataArray=dataArray.filter((res,index)=>{
                 if(res.email===currentLoginUser.email){
+                    res.Issues=<Link onClick={this.routeToIssue.bind(this,res,index)} to={`/home/${res.userId}`}>Click here</Link>
                     return res
                 }
             });
+            return newDataArray
+        }
+        else if(currentLoginUser && currentLoginUser.role==="Admin"){
+            newDataArray=dataArray.filter((res,index)=>{
+                if(res.email!=currentLoginUser.email){
+                    res.Issues=<Link onClick={this.routeToIssue.bind(this,res,index)} to={`/home/${res.userId}`}>Click here</Link>
+                }
+                return res
+              }
+            );
             return newDataArray
         }
         else{
@@ -273,8 +287,7 @@ class Home extends Component {
                     this.state.loginStatus ?
                     <div>
                     <Link onClick={this.logout} className="logout-user" to="/">Logout</Link>
-                    {/* <div >logout</div> */}
-                    <div ref={this.myRef}>home</div> 
+                    <div ref={this.myRef}>home</div>
                     </div>
                     :
                     <Link style={LinkStyle} to="/">Sign Up</Link>
@@ -290,7 +303,8 @@ class Home extends Component {
                 <div>
                 <Button variant="contained" onClick={this.addRow} style={useStyles.button}>ADD</Button>
                 <Button variant="contained" color="primary" onClick={this.updateRow} disabled={this.state.updateButtonDisable} style={useStyles.button}>UPDATE</Button>
-                <Button variant="contained" onClick={this.deleteRows} color="secondary" disabled={this.state.deleteButtonDisable} style={useStyles.button}>{this.state.deletedRowsArray.length>1?"DELETE MULTIPLE":"DELETE"}</Button></div>
+                <Button variant="contained" onClick={this.deleteRows} color="secondary" disabled={this.state.deleteButtonDisable}
+                style={useStyles.button}>{this.state.deletedRowsArray.length>1?"DELETE MULTIPLE":"DELETE"}</Button></div>
                 :
                 <div className="crud-text">Please Login to Enable CRUD</div>}
                 <DialogComponent button={actionButton} dialogTitle={this.state.dialogTitle} dialogClosedStatus={this.dialogClosedStatus} 
