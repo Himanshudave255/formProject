@@ -7,7 +7,7 @@
             "password":"dave",
             "userId":"I3896",
             "role":"Employee",
-            "issueArray":[{"issue":"Need Mouse","status":true,"assigned":"manas"},{"issue":"Need Keyboard","status":false,"assigned":"trivedi"}]
+            "issueArray":[{"issue":"Need Mouse","status":true,"assigned":"manas trivedi"},{"issue":"Need Keyboard","status":false,"assigned":"naman sharma"}]
         },
         {
             "name":"uddeshya",
@@ -16,7 +16,7 @@
             "password":"dave",
             "userId":"I3897",
             "role":"Employee",
-            "issueArray":[{"issue":"Need windows 10","status":true,"assigned":"manas"},{"issue":"Need windows 11","status":false,"assigned":"manas"}]
+            "issueArray":[{"issue":"Need windows 10","status":true,"assigned":"manas trivedi"},{"issue":"Need windows 11","status":false,"assigned":"manas trivedi"}]
         },
         {
             "name":"atul",
@@ -25,7 +25,39 @@
             "password":"dave",
             "userId":"I3898",
             "role":"Employee",
-            "issueArray":[{"issue":"Need headphone","status":false,"assigned":"manas"},{"issue":"Need speaker","status":true,"assigned":"manas"}]
+            "issueArray":[{"issue":"Need headphone","status":false,"assigned":"naman sharma"},{"issue":"Need speaker","status":true,"assigned":"naman sharma"}]
+        },
+        {
+            "name":"manish",
+            "email":"manish.kumar@impetus.co.in",
+            "designation":"Lead",
+            "password":"dave",
+            "userId":"I3899",
+            "role":"Admin"
+        },
+        {
+            "name":"rahul",
+            "email":"rahul.joshi@impetus.co.in",
+            "designation":"Manager",
+            "password":"dave",
+            "userId":"I3891",
+            "role":"Admin"
+        },
+        {
+            "name":"manas trivedi",
+            "email":"manas.trivedi@impetus.co.in",
+            "designation":"Senior NMG",
+            "password":"dave",
+            "userId":"I3892",
+            "role":"HelpDesk Engineer"
+        },
+        {
+            "name":"naman sharma",
+            "email":"naman.sharma@impetus.co.in",
+            "designation":"associate NMG",
+            "password":"dave",
+            "userId":"I3893",
+            "role":"HelpDesk Engineer"
         }
     ]
 }

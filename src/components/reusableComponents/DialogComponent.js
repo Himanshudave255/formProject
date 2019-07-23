@@ -50,7 +50,7 @@ function DialogComponent(props) {
           <DialogActions>
             <Button onClick={handleClose} color="primary">CLOSE</Button>
             {
-              props.button?
+              props.button!=null?
             <Button onClick={handleUserClick} color="primary">{props.button.text}</Button>
             :null
             }

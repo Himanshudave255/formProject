@@ -157,16 +157,20 @@ export default class App extends Component {
   }
   dialogClosedStatus=()=>{
     let data=this.getLocalStorageData();
+    if(this.state.issueObj.value){
+    this.state.issueArray.issueArray=[...this.state.issueArray.issueArray,{issue:this.state.issueObj.value,status:true,assigned:""}];
+    }
     data[this.state.issueArrayIndex].issueArray=this.state.issueArray.issueArray;
     localStorage.setItem("Data",JSON.stringify(data));
     this.setState({
-      dialogStatus:false
+      dialogStatus:false,
+      issueObj:{...this.state.issueObj,value:""}
     })
   }
 
   currentOpenIssue=(currentIssueOpenobj,indexForUpdate)=>{
     this.setState({
-      issueArray:currentIssueOpenobj,
+      issueArray:currentIssueOpenobj.issueArray?currentIssueOpenobj:{...currentIssueOpenobj,issueArray:[]},
       issueArrayIndex:indexForUpdate,
       dialogStatus:true
     },()=>{
@@ -188,36 +192,49 @@ export default class App extends Component {
 
   changeEventForAdd(event){
     this.setState({
-      issueObj:{...this.state.issueObj,value:event.target.value}
+      issueObj:{...this.state.issueObj,value:event.target.value},
     },()=>{
+      this.setState({
+        contentArrayForIssues:this.state.contentArrayForIssues.map((res,index)=>{
+          if(index===this.state.contentArrayForIssues.length-1){
+            res = <InputField key={index} onChange={this.changeEventForAdd.bind(this)} config={this.state.issueObj} />
+          }
+          return res
+        })
+      })
     })
   }
 
   setNewArrayOfIssues(){
-    let loggedInUser=JSON.parse(localStorage.getItem("currentLogin")).role;
+    let user=this.loggedInUserRole();
+    let loggedInUser=user.role;
     let issueObj;
     this.setState({
       contentArrayForIssues:this.state.issueArray.issueArray.map((res,index)=>{
         issueObj={ issue:{ label:"issue",placeholder:"issue",disable:loggedInUser==="HelpDesk Engineer"?true:false,className:"input-field-issue",name:"issue" },
-               assigned:{ label:"assigned person",disable:loggedInUser==="Admin"?false:true,placeholder:"assigner",className:"input-field-issue",name:"assigned" } };
+               assigned:{ label:"assigned person",disable:loggedInUser==="Admin"?false:true,placeholder:"assigner",className:"input-field-issue",name:"assigned" },
+              status:{disable:res.assigned!=user.name && loggedInUser==="HelpDesk Engineer"?true:false}};
         issueObj["issue"].value=res.issue;
         issueObj["assigned"].value=res.assigned;
         return <div style={styleSheet.issueArray} key={index}>
         <InputField onChange={this.changeEvent.bind(this,index)} config={issueObj.issue} />
         <InputField onChange={this.changeEvent.bind(this,index)} config={issueObj.assigned} />
-        <Checkbox name="status" checked={res.status} onChange={this.changeEvent.bind(this,index)} />
+        <Checkbox name="status" disabled={issueObj.status.disable} checked={res.status} onChange={this.changeEvent.bind(this,index)} />
         </div>
       })
     })
   }
+  loggedInUserRole(){
+    return JSON.parse(localStorage.getItem("currentLogin"));
+  }
   dialogCustomButtonClick=(status)=>{
     this.setState({
       contentArrayForIssues:[...this.state.contentArrayForIssues,
-        <input type="text" value={this.state.issueObj.value} onChange={this.changeEventForAdd} key={Math.random()}/>]
+        <InputField onChange={this.changeEventForAdd.bind(this)} key={this.state.contentArrayForIssues.length} config={this.state.issueObj}/>]
     });
   }
   render() {
-    let actionButton={text:"Add Issue", clickEvent:this.dialogCustomButtonClick}
+    let actionButton={text:"Add Issue", clickEvent:this.dialogCustomButtonClick};
     let customValidation={email:{function:this.customEmailvalidation.bind(this)},
     userId:{function:this.customUserIdValidation.bind(this)}};
     return (
@@ -238,8 +255,8 @@ export default class App extends Component {
       <myContext.Provider value="this is impetus, an IT company.">
       <Route path="/home" render={()=>(<Home history={this.props.history} openIssue={this.currentOpenIssue} logoutStatus={this.userLoggedOut} loginStatus={this.state.loginUserStatus}/>)} />
       <Route path="/home/:userId" render={()=>(
-        <DialogComponent button={actionButton} dialogTitle="My issues" dialogClosedStatus={this.dialogClosedStatus} 
-        content={this.state.issueArray?this.state.contentArrayForIssues:null} dialogStatus={this.state.dialogStatus}/>
+        <DialogComponent button={this.loggedInUserRole().role==="Employee"?actionButton:null} dialogTitle="My issues" dialogClosedStatus={this.dialogClosedStatus} 
+        content={this.state.issueArray && this.state.contentArrayForIssues && this.state.contentArrayForIssues.length!=0?this.state.contentArrayForIssues:<div>No current Issues</div>} dialogStatus={this.state.dialogStatus}/>
       )} />
       </myContext.Provider>
       {this.state.loginUserStatus?

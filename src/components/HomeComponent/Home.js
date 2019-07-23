@@ -185,7 +185,8 @@ class Home extends Component {
         localStorage.removeItem("currentLogin");
         this.props.logoutStatus(true);
     }
-    routeToIssue(obj,index){
+    routeToIssue(index){
+        let obj=JSON.parse(localStorage.getItem("Data"))[index];
         this.props.openIssue(obj,index);
     }
     deletedItem=(arrayOfDeletedItem)=>{
@@ -240,22 +241,32 @@ class Home extends Component {
         if(currentLoginUser && currentLoginUser.role==="Employee"){
             newDataArray=dataArray.filter((res,index)=>{
                 if(res.email===currentLoginUser.email){
-                    res.Issues=<Link onClick={this.routeToIssue.bind(this,res,index)} to={`/home/${res.userId}`}>Click here</Link>
+                    res.Issues=<Link onClick={this.routeToIssue.bind(this,index)} to={`/home/${res.userId}`}>Click here</Link>
                     return res
                 }
             });
             return newDataArray
         }
-        else if(currentLoginUser && currentLoginUser.role==="Admin"){
+        else if(currentLoginUser && currentLoginUser.role==="HelpDesk Engineer"){
             newDataArray=dataArray.filter((res,index)=>{
-                if(res.email!=currentLoginUser.email){
-                    res.Issues=<Link onClick={this.routeToIssue.bind(this,res,index)} to={`/home/${res.userId}`}>Click here</Link>
+                if(res.role!="Admin" && res.role!="HelpDesk Engineer"){
+                    res.Issues=<Link onClick={this.routeToIssue.bind(this,index)} to={`/home/${res.userId}`}>Click here</Link>
+                    return res
+                }
+            });
+            return newDataArray
+        }
+        else if(currentLoginUser){
+            newDataArray=dataArray.filter((res,index)=>{
+                if(res.email!=currentLoginUser.email && res.role!="Admin"){
+                    res.Issues=<Link onClick={this.routeToIssue.bind(this,index)} to={`/home/${res.userId}`}>Click here</Link>
                 }
                 return res
               }
             );
             return newDataArray
         }
+        
         else{
             return dataArray;
         }
