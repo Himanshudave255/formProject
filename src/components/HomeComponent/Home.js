@@ -235,7 +235,8 @@ class Home extends Component {
 
       //code for selection of user
       getLocalStorageData(){
-        let dataArray=[];let newDataArray=[];
+        let dataArray=[];
+        let newDataArray=[];
         let currentLoginUser=JSON.parse(localStorage.getItem("currentLogin"));
         dataArray=JSON.parse(localStorage.getItem("Data"));
         if(currentLoginUser && currentLoginUser.role==="Employee"){
@@ -304,20 +305,20 @@ class Home extends Component {
                     <Link style={LinkStyle} to="/">Sign Up</Link>
                 }
                 <Router>
-                    <Route path="/aboutus" render={()=>(<AboutUs heading={this.state.aboutUs}/>)} />
-                    <Route path="/contactus" render={()=>(<ContactUs heading={this.state.aboutUs}/>)} />
-                    <Link to="/aboutus">About Us</Link>
-                    <Link to="/contactus">Contact Us</Link>
+                    <Route path="/home/aboutus" render={()=>(<AboutUs heading={this.state.aboutUs}/>)} />
+                    <Route path="/home/contactus" render={()=>(<ContactUs heading={this.state.aboutUs}/>)} />
+                    <Link to="/home/aboutus">About Us</Link>
+                    <Link to="/home/contactus">Contact Us</Link>
                 </Router>
                 <TableComponent setDeleteItem={this.deletedItem} keyProp="userId" rows={this.state.rows} column={this.state.columnKeys} size="medium"></TableComponent>
-                {this.state.loginStatus ?
+                {this.state.loginStatus && JSON.parse(localStorage.getItem("currentLogin")).role==="Admin" ?
                 <div>
                 <Button variant="contained" onClick={this.addRow} style={useStyles.button}>ADD</Button>
                 <Button variant="contained" color="primary" onClick={this.updateRow} disabled={this.state.updateButtonDisable} style={useStyles.button}>UPDATE</Button>
                 <Button variant="contained" onClick={this.deleteRows} color="secondary" disabled={this.state.deleteButtonDisable}
                 style={useStyles.button}>{this.state.deletedRowsArray.length>1?"DELETE MULTIPLE":"DELETE"}</Button></div>
                 :
-                <div className="crud-text">Please Login to Enable CRUD</div>}
+                <div className="crud-text">Please Login to Enable CRUD, OR MAY BE YOU ARE NOT THE ADMIN</div>}
                 <DialogComponent button={actionButton} dialogTitle={this.state.dialogTitle} dialogClosedStatus={this.dialogClosedStatus} 
                 content={<RUCforms submit={this.state.triggerSubmit} submitButton={false} custom={customValidation} formOutput={this.formData}
                 form={this.state.addDialogForm}/>} dialogStatus={this.state.dialogStatus}/>

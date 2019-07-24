@@ -4,13 +4,14 @@ import './App.css';
 import Header from './components/HeaderComponent/Header';
 import RUCforms from './components/RUCformsComponent/RUCforms'; 
 import Home from './components/HomeComponent/Home';
-import { Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Route, Link, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 // import { createBrowserHistory } from "history";
 import AboutUs from './components/reusableComponents/AboutUs';
 import Data from './data/home.json';
 import InputField from './components/reusableComponents/InputField';
 import DialogComponent from './components/reusableComponents/DialogComponent';
 import Checkbox from '@material-ui/core/Checkbox';
+// import Switch from '@material-ui/core/Switch/Switch';
 
 export const myContext=React.createContext();
 
@@ -21,6 +22,9 @@ const styleSheet={
   },
   inputField:{
     padding:10
+  },
+  statusLable:{
+    marginTop: 37
   }
 }
 
@@ -106,6 +110,7 @@ export default class App extends Component {
       heading:"ENTER LOGIN DETAILS"
     })
   }
+
   signupFormData=(status,formValue)=>{
     if(formValue){
     let empData=this.getLocalStorageData();
@@ -119,13 +124,12 @@ export default class App extends Component {
    }
   }
 
-  navigateToHome(){
-
-  }
+  navigateToHome(){}
 
   userLoggedOut=(logoutStatus)=>{
     this.setState({
-      loginUserStatus:!logoutStatus
+      loginUserStatus:!logoutStatus,
+      heading:"Sign Up"
     })
   }
 
@@ -220,6 +224,7 @@ export default class App extends Component {
         <InputField onChange={this.changeEvent.bind(this,index)} config={issueObj.issue} />
         <InputField onChange={this.changeEvent.bind(this,index)} config={issueObj.assigned} />
         <Checkbox name="status" disabled={issueObj.status.disable} checked={res.status} onChange={this.changeEvent.bind(this,index)} />
+        <label style={styleSheet.statusLable}>{res.status?"OPEN":"CLOSED"}</label>
         </div>
       })
     })
@@ -253,11 +258,14 @@ export default class App extends Component {
       </div>
       )}/>
       <myContext.Provider value="this is impetus, an IT company.">
-      <Route path="/home" render={()=>(<Home history={this.props.history} openIssue={this.currentOpenIssue} logoutStatus={this.userLoggedOut} loginStatus={this.state.loginUserStatus}/>)} />
+      <Route exact path="/home" render={()=>(<Home history={this.props.history} openIssue={this.currentOpenIssue} 
+      logoutStatus={this.userLoggedOut} loginStatus={this.state.loginUserStatus}/>)} />
       <Route path="/home/:userId" render={()=>(
-        <DialogComponent button={this.loggedInUserRole().role==="Employee"?actionButton:null} dialogTitle="My issues" dialogClosedStatus={this.dialogClosedStatus} 
-        content={this.state.issueArray && this.state.contentArrayForIssues && this.state.contentArrayForIssues.length!=0?this.state.contentArrayForIssues:<div>No current Issues</div>} dialogStatus={this.state.dialogStatus}/>
-      )} />
+        <DialogComponent button={this.loggedInUserRole().role==="Employee"?actionButton:null} dialogTitle="My issues"
+         dialogClosedStatus={this.dialogClosedStatus} content={this.state.issueArray && this.state.contentArrayForIssues
+         && this.state.contentArrayForIssues.length!=0?this.state.contentArrayForIssues:<div>No current Issues</div>} 
+         dialogStatus={this.state.dialogStatus}/>
+      )} />      
       </myContext.Provider>
       {this.state.loginUserStatus?
       <div>
