@@ -37,8 +37,11 @@ function DialogComponent(props) {
         <div>
         <Dialog
           fullWidth={true}
+          fullScreen={true}
           aria-labelledby="customized-dialog-title"
           open={dialogStatus}
+          disableBackdropClick={true}
+          disableEscapeKeyDown={true}
           
         >
           <MuiDialogTitle>{props.dialogTitle?props.dialogTitle:"USER DIALOG"}</MuiDialogTitle>
