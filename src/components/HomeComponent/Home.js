@@ -115,7 +115,8 @@ class Home extends Component {
 			},
 			intialDialogForm: {},
 			dialogTitle: '',
-			rows: [],
+            rows: [],
+            initialRows:[],      //rows for initial data for filtering
 			deletedRowsArray: [],
 			columnKeys: [],
 			updateButtonDisable: true,
@@ -134,7 +135,8 @@ class Home extends Component {
 	loadEmployeeData() {
 		let jsonData = [];
 		this.setState({
-			rows: this.getLocalStorageData(),
+            rows: this.getLocalStorageData(),
+            initialRows:this.getLocalStorageData(),
 			columnKeys: ['name', 'email', 'designation', 'role', 'userId', 'Issues'],
 		});
 	}
@@ -350,14 +352,20 @@ class Home extends Component {
 			updateButtonDisable: true,
 		});
 	};
-	changeEvent = e => {
+	searchbarChangeEvent = e => {
+        let value=[];
 		this.setState({
 			searchBarValue: e.target.value,
-			rows: this.state.rows.filter(it => {
-				if (Object.values(it).includes(e.target.value)) {
-					return it;
-				}
-			}),
+			rows:this.state.initialRows.filter(it => {
+				value=Object.values(it).find(res=>{
+                    if(typeof(res)==="string" && res.includes(e.target.value)){
+                        return it
+                    }
+                })
+                {
+                    return value;
+                }
+			})
 		});
 	};
 	render() {
@@ -394,7 +402,7 @@ class Home extends Component {
 					<Link to="/home/aboutus">About Us</Link>
 					<Link to="/home/contactus">Contact Us</Link>
 				</Router>
-				<InputField onChange={this.changeEvent.bind(this)} config={searchBarObj} />
+				<InputField onChange={this.searchbarChangeEvent.bind(this)} config={searchBarObj} />
 				<TableComponent
 					setDeleteItem={this.deletedItem}
 					keyProp="userId"
