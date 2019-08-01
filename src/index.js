@@ -1,25 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './App-container';
 import RUCforms from './components/RUCformsComponent/RUCforms';
 import Home from './components/HomeComponent/Home';
 import * as serviceWorker from './serviceWorker';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import { createBrowserHistory } from "history";
+import history from "./history";
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducer from './store/reducer';
-// import ReduxExample from './components/ReduxExample';
+import WriteToUs from './components/reusableComponents/WriteToUs';
 
 const store=createStore(reducer);
 
-const history = createBrowserHistory();
 const routing = (
   <Provider store={store}>
     <Router history={history}>
       <div>
         <Route path="/" component={App} />
+        <Route exact path="/home/contactus/writetous" render={()=>(<WriteToUs/>)} />
+        {/* <Route exact path="/home" component={Home} /> */}
          {/* to be removed later */}
       </div>
     </Router>

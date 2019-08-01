@@ -3,9 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import Header from './components/HeaderComponent/Header';
 import RUCforms from './components/RUCformsComponent/RUCforms';
-import Home from './components/HomeComponent/Home';
-import { Route, Link, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
-// import { createBrowserHistory } from "history";
+import Home from './components/HomeComponent/Home-container';
+import { Route, Link, Router, Redirect, Switch } from 'react-router-dom';
 import AboutUs from './components/reusableComponents/AboutUs';
 import Data from './data/home.json';
 import InputField from './components/reusableComponents/InputField';
@@ -13,6 +12,10 @@ import DialogComponent from './components/reusableComponents/DialogComponent';
 import Checkbox from '@material-ui/core/Checkbox';
 import { connect } from 'react-redux';
 import * as actionTypes from './store/action';
+import Button from '@material-ui/core/Button';
+import history from './history';
+import WriteToUs from './components/reusableComponents/WriteToUs';
+
 export const myContext = React.createContext();
 
 const styleSheet = {
@@ -34,6 +37,7 @@ class App extends Component {
 		super(props);
 		this.firstRef = React.createRef('hello');
 		this.state = {
+      customButton:{customActionButtonText:"Add Issue",disable:false},
 			dialogStatus: false,
 			contentArrayForIssues: undefined,
 			issueArrayIndex: null,
@@ -250,19 +254,10 @@ class App extends Component {
 			});
 		} else {
 			alert('Wrong Email and password');
-			this.props.history.push('/');
+			history.push('/');
 		}
 	};
 	dialogClosedStatus = () => {
-		let data = this.getLocalStorageData();
-		if (this.state.issueObj.value) {
-			this.state.issueArray.issueArray = [
-				...this.state.issueArray.issueArray,
-				{ issue: this.state.issueObj.value, status: true, assigned: '' },
-			];
-		}
-		data[this.state.issueArrayIndex].issueArray = this.state.issueArray.issueArray;
-		localStorage.setItem('Data', JSON.stringify(data));
 		this.setState({
 			dialogStatus: false,
 			issueObj: { ...this.state.issueObj, value: '' },
@@ -303,10 +298,11 @@ class App extends Component {
 		);
 	}
 
-	changeEventForAdd(event) {
+	changeEventForAdd(event) { 
 		this.setState(
 			{
-				issueObj: { ...this.state.issueObj, value: event.target.value },
+        issueObj: { ...this.state.issueObj, value: event.target.value },
+        customButton:{...this.state.customButton,customActionButtonText:event.target.value?"UPDATE ISSUES":"ADD ISSUE",disable:event.target.value?false:true},
 			},
 			() => {
 				this.setState({
@@ -373,20 +369,46 @@ class App extends Component {
 	loggedInUserRole() {
 		return JSON.parse(localStorage.getItem('currentLogin'));
 	}
-	dialogCustomButtonClick = status => {
+	linkToHome() {
+		history.push('/home');
+  }
+  addDataToLocalStorage(){
+  let data = this.getLocalStorageData();
+		if (this.state.issueObj.value) {
+			this.state.issueArray.issueArray = [
+				...this.state.issueArray.issueArray,
+				{ issue: this.state.issueObj.value, status: true, assigned: '' },
+			];
+		}
+    data[this.state.issueArrayIndex].issueArray = this.state.issueArray.issueArray;
+    localStorage.setItem('Data', JSON.stringify(data));
+  }
+
+	dialogCustomButtonClick = (text) => {
+    if(text==="Add Issue"){
 		this.setState({
+      customButton:{...this.state.customButton,disable:true},
 			contentArrayForIssues: [
-				...this.state.contentArrayForIssues,
+        ...this.state.contentArrayForIssues,
 				<InputField
 					onChange={this.changeEventForAdd.bind(this)}
 					key={this.state.contentArrayForIssues.length}
 					config={this.state.issueObj}
 				/>,
 			],
-		});
+    });
+  }
+  else{
+    debugger
+    this.setState({
+      customButton:{...this.state.customButton,customActionButtonText:"Add Issue"},
+      issueObj:{...this.state.issueObj,value:""}
+    });
+    this.addDataToLocalStorage();
+  }
 	};
 	render() {
-		let actionButton = { text: 'Add Issue', clickEvent: this.dialogCustomButtonClick };
+		let actionButton = { text: this.state.customButton.customActionButtonText,disable:this.state.customButton.disable,clickEvent: this.dialogCustomButtonClick.bind(this,this.state.customButton.customActionButtonText) };
 		let customValidation = {
 			email: { function: this.customEmailvalidation.bind(this) },
 			userId: { function: this.customUserIdValidation.bind(this) },
@@ -398,17 +420,23 @@ class App extends Component {
 				) : (
 					<Header heading="ENTER LOGIN DETAILS" />
 				)}
-				<Router>
+				<Router history={history}>
+        <Route path="/writetous" render={()=>(<WriteToUs counterValue=""/>)} />
 					<Route
 						path="/login"
 						render={() => (
-							<RUCforms
-								submitButtonText="LOGIN"
-								formClass="sign-up-class"
-								custom={customValidation}
-								form={this.state.loginForm}
-								formOutput={this.loginFormOutput}
-							/>
+							<div>
+								<RUCforms
+									submitButtonText="LOGIN"
+									formClass="sign-up-class"
+									custom={customValidation}
+									form={this.state.loginForm}
+									formOutput={this.loginFormOutput}
+								/>
+								<Button onClick={this.linkToHome.bind(this)} color="primary">
+									Skip SignIn For Now
+								</Button>
+							</div>
 						)}
 					/>
 					<Route
@@ -477,20 +505,5 @@ class App extends Component {
 		);
 	}
 }
-const mapStateToProps = state => {
-	return {
-		loggedInState: state.loggedIn,
-	};
-};
 
-const mapDispatchToProps = dispatch => {
-	return {
-		onLoggedIn: status => dispatch({ type: actionTypes.ADD_CURRENT_USER }),
-		onLoggedOut: status => dispatch({ type: actionTypes.REMOVE_CURRENT_USER }),
-	};
-};
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(App);
+export default App;

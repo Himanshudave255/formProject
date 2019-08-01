@@ -6,6 +6,7 @@
             "designation":"Associate",
             "password":"dave",
             "userId":"I3896",
+            "age":20,
             "role":"Employee",
             "issueArray":[{"issue":"Need Mouse","status":true,"assigned":"manas trivedi"},{"issue":"Need Keyboard","status":false,"assigned":"naman sharma"}]
         },
@@ -15,6 +16,7 @@
             "designation":"Trainee",
             "password":"dave",
             "userId":"I3897",
+            "age":21,
             "role":"Employee",
             "issueArray":[{"issue":"Need windows 10","status":true,"assigned":"manas trivedi"},{"issue":"Need windows 11","status":false,"assigned":"manas trivedi"}]
         },
@@ -23,6 +25,7 @@
             "email":"atul.singh@impetus.co.in",
             "designation":"Trainee",
             "password":"dave",
+            "age":22,
             "userId":"I3898",
             "role":"Employee",
             "issueArray":[{"issue":"Need headphone","status":false,"assigned":"naman sharma"},{"issue":"Need speaker","status":true,"assigned":"naman sharma"}]
@@ -33,6 +36,7 @@
             "designation":"Lead",
             "password":"dave",
             "userId":"I3899",
+            "age":23,
             "role":"Admin"
         },
         {
@@ -40,6 +44,7 @@
             "email":"rahul.joshi@impetus.co.in",
             "designation":"Manager",
             "password":"dave",
+            "age":23,
             "userId":"I3891",
             "role":"Admin"
         },
@@ -48,7 +53,8 @@
             "email":"manas.trivedi@impetus.co.in",
             "designation":"Senior NMG",
             "password":"dave",
-            "userId":"I3892",
+            "age":35,
+            "userId":"I7777",
             "role":"HelpDesk Engineer"
         },
         {
@@ -56,6 +62,7 @@
             "email":"naman.sharma@impetus.co.in",
             "designation":"associate NMG",
             "password":"dave",
+            "age":37,
             "userId":"I3893",
             "role":"HelpDesk Engineer"
         }

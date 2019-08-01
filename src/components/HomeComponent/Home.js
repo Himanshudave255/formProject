@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AboutUs from '../reusableComponents/AboutUs';
 import ContactUs from '../reusableComponents/ContactUs';
+import WriteToUs from '../reusableComponents/WriteToUs';
 import './Home.css';
 import { Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom';
 // import Data from '../../data/home.json';
@@ -13,6 +14,8 @@ import RUCforms from '../RUCformsComponent/RUCforms';
 import DialogComponent from '../reusableComponents/DialogComponent';
 import { connect } from 'react-redux';
 import InputField from '../reusableComponents/InputField';
+import Filterdata from '../HOC/Filterdata';
+import history from '../../history';
 const LinkStyle = {
 	float: 'right',
 	marginTop: -40,
@@ -29,7 +32,8 @@ const useStyles = {
 
 class Home extends Component {
 	constructor(props) {
-		super(props);
+        super(props);
+        // console.log("home",this.props);
 		this.myRef = React.createRef();
 		this.state = {
 			searchBarValue: '',
@@ -351,32 +355,14 @@ class Home extends Component {
 			deleteButtonDisable: true,
 			updateButtonDisable: true,
 		});
-	};
+    };
+    
 	searchbarChangeEvent = e => {
-        let value=[];
 		this.setState({
-			searchBarValue: e.target.value,
-			rows:this.state.initialRows.filter(it => {
-				value=Object.values(it).find(res=>{
-                    if(typeof(res)==="string" && res.includes(e.target.value)){
-                        return it
-                    }
-                })
-                {
-                    return value;
-                }
-			})
+			searchBarValue: e.target.value
 		});
-	};
+	};    
 	render() {
-		let searchBarObj = {
-			label: 'Search Bar',
-			placeholder: 'search bar',
-			disable: false,
-			className: 'input-field-issue',
-			name: 'search',
-			value: this.state.searchBarValue,
-		};
 		let customValidation = {
 			email: { function: this.customEmailvalidation.bind(this) },
 			userId: { function: this.customUserIdValidation.bind(this) },
@@ -395,20 +381,20 @@ class Home extends Component {
 					<Link style={LinkStyle} to="/">
 						Sign Up
 					</Link>
-				)}
-				<Router>
+                )}
+                
+				<Router history={history}>
 					<Route path="/home/aboutus" render={() => <AboutUs heading={this.state.aboutUs} />} />
 					<Route path="/home/contactus" render={() => <ContactUs heading={this.state.aboutUs} />} />
 					<Link to="/home/aboutus">About Us</Link>
 					<Link to="/home/contactus">Contact Us</Link>
 				</Router>
-				<InputField onChange={this.searchbarChangeEvent.bind(this)} config={searchBarObj} />
 				<TableComponent
 					setDeleteItem={this.deletedItem}
 					keyProp="userId"
 					rows={this.state.rows}
 					column={this.state.columnKeys}
-					size="medium"
+                    size="medium"
 				/>
 				{this.props.loginStatusFromRedux &&
 				JSON.parse(localStorage.getItem('currentLogin')).role === 'Admin' ? (
@@ -457,11 +443,4 @@ class Home extends Component {
 		);
 	}
 }
-
-const mapStateToProps = state => {
-	return {
-		loginStatusFromRedux: state.loggedIn,
-	};
-};
-
-export default connect(mapStateToProps)(Home);
+export default Home;

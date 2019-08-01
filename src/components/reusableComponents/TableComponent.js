@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import { setTimeout } from 'timers';
+import Filterdata from '../HOC/Filterdata';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -143,5 +144,14 @@ function TableComponent(props) {
     )
 }
 
-export default TableComponent
+export default Filterdata(TableComponent)
+
+
+
+
+
+
+
+
+
 
